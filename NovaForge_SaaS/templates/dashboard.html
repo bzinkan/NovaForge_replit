@@ -1,121 +1,174 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="flex h-screen overflow-hidden">
+<div class="fixed inset-0 z-[-1] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-50 contrast-150"></div>
+<div class="fixed inset-0 z-[-2] bg-slate-950">
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+</div>
 
-    <aside class="w-64 glass-panel border-r border-white/10 hidden md:flex flex-col">
-        <div class="p-6">
-            <h1 class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">
-                NOVA<span class="font-light text-white">FORGE</span>
+<div class="flex h-screen overflow-hidden font-sans text-slate-300">
+
+    <aside class="w-72 glass-panel border-r border-white/5 hidden md:flex flex-col relative overflow-hidden backdrop-blur-xl bg-slate-900/40">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+        
+        <div class="p-8">
+            <h1 class="text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">
+                NOVA<span class="text-cyan-600">FORGE</span>
             </h1>
+            <p class="text-xs text-cyan-500/60 tracking-widest mt-1 font-mono">SYSTEM V.2.0</p>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 mt-4">
-            <a href="#" class="flex items-center px-4 py-3 text-cyan-400 bg-slate-800/50 rounded-lg border-l-4 border-cyan-500 transition-all">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                Overview
+        <nav class="flex-1 px-4 space-y-3 mt-4">
+            <a href="#" class="group relative flex items-center px-4 py-4 text-white bg-cyan-500/10 rounded-xl border border-cyan-500/20 shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all">
+                <div class="absolute inset-0 bg-cyan-400/10 blur-lg group-hover:blur-xl transition-all opacity-0 group-hover:opacity-100"></div>
+                <svg class="w-5 h-5 mr-3 text-cyan-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                <span class="relative z-10 font-medium tracking-wide">Command Center</span>
             </a>
-            <a href="#" class="flex items-center px-4 py-3 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/30 rounded-lg transition-colors">
+            
+            <a href="#" class="flex items-center px-4 py-4 text-slate-500 hover:text-cyan-200 hover:bg-white/5 rounded-xl transition-all border border-transparent hover:border-white/10">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 19.464a2.414 2.414 0 01-3.414 0l-.828-.828a2.414 2.414 0 010-3.414l5.743-5.743A6 6 0 1120 9z"></path></svg>
-                API Keys
-            </a>
-            <a href="#" class="flex items-center px-4 py-3 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/30 rounded-lg transition-colors">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Usage & Billing
+                <span class="tracking-wide">Neural Link Keys</span>
             </a>
         </nav>
-
-        <div class="p-4 border-t border-white/5">
-            <div class="flex items-center">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600"></div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-white">{{ user.username }}</p>
-                    <p class="text-xs text-slate-500">View Profile</p>
+        
+        <div class="p-6 border-t border-white/5 bg-black/20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 ring-2 ring-white/10 shadow-[0_0_15px_rgba(34,211,238,0.4)]"></div>
+                <div>
+                    <p class="text-sm font-bold text-white">{{ user.name }}</p>
+                    <p class="text-xs text-cyan-400 font-mono">LVL 42 ARCHITECT</p>
                 </div>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto bg-slate-950 p-8">
-
-        <header class="mb-10 flex justify-between items-end">
+    <main class="flex-1 overflow-y-auto p-10 relative">
+        
+        <header class="mb-12 flex justify-between items-end">
             <div>
-                <h2 class="text-3xl font-bold text-white">Welcome back, Pilot.</h2>
-                <p class="text-slate-400 mt-1">System status: <span class="text-green-400">● Operational</span></p>
+                <h2 class="text-4xl font-bold text-white mb-2 tracking-tight">Welcome back, Pilot.</h2>
+                <div class="flex items-center gap-2 font-mono text-sm">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="text-green-400">SYSTEM ONLINE</span>
+                    <span class="text-slate-600">|</span>
+                    <span class="text-slate-400">Connected to Replit Server</span>
+                </div>
             </div>
-            <button onclick="startForge()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2 rounded-lg font-medium shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all">
-                + New Forge
+            
+            <button onclick="startForge()" class="group relative px-8 py-3 bg-cyan-600 rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(8,145,178,0.4)]">
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="relative z-10 font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    INITIATE FORGE
+                </span>
             </button>
         </header>
 
-        <section class="mb-10">
-            <div class="glass-panel rounded-xl p-6 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                <h3 class="text-sm uppercase tracking-wider text-slate-400 font-semibold mb-3">Active API Key</h3>
-                <div class="flex items-center gap-4">
-                    <div id="api-key" class="flex-1 bg-black/50 border border-white/10 rounded-lg p-4 font-mono text-green-400 text-lg tracking-wide relative">
-                        {{ user.api_key }}
+        <section class="mb-8">
+            <div class="glass-panel rounded-2xl p-1 border border-white/10 bg-gradient-to-br from-slate-800/50 to-black/50 backdrop-blur-md">
+                <div class="bg-black/40 rounded-xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] -mr-20 -mt-20 pointer-events-none"></div>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="flex-1 w-full">
+                            <h3 class="text-xs font-mono uppercase text-cyan-500 mb-2 flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                Master Control Key
+                            </h3>
+                            <div class="flex items-center gap-3">
+                                <div id="api-key" class="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg p-4 font-mono text-cyan-300 text-lg tracking-[0.15em] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                                    {{ user.api_key }}
+                                </div>
+                                <button data-copy-target="api-key" class="bg-slate-800 hover:bg-cyan-900/40 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400 px-6 py-4 rounded-lg font-mono text-sm uppercase transition-all whitespace-nowrap">
+                                    Copy Key
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button data-copy-target="api-key" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-4 rounded-lg border border-white/10 font-medium transition-colors">
-                        Copy
-                    </button>
                 </div>
-                <p class="text-xs text-slate-500 mt-3">* Keep this key secret. It grants full access to your NovaForge instance.</p>
             </div>
         </section>
 
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="glass-panel p-6 rounded-xl border-t border-white/5">
-                <h4 class="text-slate-400 text-sm font-medium mb-2">Credits Remaining</h4>
-                <div class="flex items-end justify-between mb-2">
-                    <span class="text-3xl font-bold text-white">{{ user.credits_total - user.credits_used }}</span>
-                    <span class="text-sm text-cyan-400">{{ usage_percent }}% Used</span>
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="glass-panel p-6 rounded-2xl border border-white/5 bg-slate-900/40 hover:bg-slate-800/40 transition-colors group">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-slate-400 text-xs font-mono uppercase tracking-wider">Energy Cells</h4>
+                    <svg class="w-5 h-5 text-cyan-500/50 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <div class="w-full bg-slate-800 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full" style="width: {{ usage_percent }}%"></div>
+                <div class="flex items-end gap-2 mb-4">
+                    <span class="text-4xl font-bold text-white">{{ user.credits_total - user.credits_used }}</span>
+                    <span class="text-sm text-cyan-500 font-mono mb-1">/ {{ user.credits_total }}</span>
                 </div>
-            </div>
-
-            <div class="glass-panel p-6 rounded-xl border-t border-white/5">
-                <h4 class="text-slate-400 text-sm font-medium mb-2">Total Scenes Generated</h4>
-                <div class="flex items-center justify-between">
-                    <span class="text-3xl font-bold text-white">1,248</span>
-                    <div class="p-2 bg-green-500/10 rounded-lg">
-                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    </div>
+                <div class="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-gradient-to-r from-cyan-600 to-blue-500 h-full rounded-full shadow-[0_0_10px_rgba(6,182,212,0.8)]" style="width: {{ usage_percent }}%"></div>
                 </div>
             </div>
 
-            <div class="glass-panel p-6 rounded-xl border-t border-white/5 relative overflow-hidden">
-                <h4 class="text-slate-400 text-sm font-medium mb-2">Current Plan</h4>
+            <div class="glass-panel p-6 rounded-2xl border border-white/5 bg-slate-900/40 hover:bg-slate-800/40 transition-colors group">
+                 <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-slate-400 text-xs font-mono uppercase tracking-wider">Worlds Forged</h4>
+                    <svg class="w-5 h-5 text-purple-500/50 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <span class="text-4xl font-bold text-white">1,248</span>
+                <p class="text-xs text-green-400 mt-2 flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    +12% efficiency
+                </p>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border border-white/5 bg-slate-900/40 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/20 blur-2xl rounded-full"></div>
+                <h4 class="text-slate-400 text-xs font-mono uppercase tracking-wider mb-4">Clearance Level</h4>
                 <div class="flex items-center justify-between z-10 relative">
-                    <span class="text-3xl font-bold text-white">{{ user.plan }}</span>
-                    <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs border border-indigo-500/30">Active</span>
+                    <span class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-300">{{ user.plan }}</span>
+                    <span class="px-3 py-1 bg-purple-500/10 text-purple-300 rounded-full text-[10px] font-mono border border-purple-500/20 uppercase tracking-widest">Active</span>
                 </div>
             </div>
         </section>
 
         <section>
-            <h3 class="text-xl font-bold text-white mb-4">Recent Activity</h3>
-            <div class="glass-panel rounded-xl overflow-hidden">
-                <table class="w-full text-left text-slate-400">
-                    <thead class="bg-slate-800/50 text-xs uppercase font-medium">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white">Generation Logs</h3>
+                <button class="text-xs text-cyan-500 hover:text-cyan-400 font-mono">[VIEW FULL HISTORY]</button>
+            </div>
+            
+            <div class="glass-panel rounded-xl overflow-hidden border border-white/5 bg-slate-900/60 backdrop-blur-xl">
+                <table class="w-full text-left">
+                    <thead class="bg-black/30 text-xs uppercase font-mono text-slate-500">
                         <tr>
-                            <th class="px-6 py-3">Prompt</th>
-                            <th class="px-6 py-3">Date</th>
-                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-4 font-medium tracking-wider">Command Prompt</th>
+                            <th class="px-6 py-4 font-medium tracking-wider">Worker Unit</th>
+                            <th class="px-6 py-4 font-medium tracking-wider">Timestamp</th>
+                            <th class="px-6 py-4 font-medium tracking-wider text-right">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-white/5">
+                    <tbody class="divide-y divide-white/5 text-sm">
                         {% for log in activity %}
-                        <tr class="hover:bg-white/5 transition-colors">
-                            <td class="px-6 py-4 text-white">{{ log.prompt }}</td>
-                            <td class="px-6 py-4">{{ log.timestamp }}</td>
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="px-6 py-4 text-slate-300 font-medium group-hover:text-cyan-300 transition-colors">
+                                <span class="opacity-50 mr-2">></span> {{ log.prompt }}
+                            </td>
                             <td class="px-6 py-4">
-                                {% if log.status == 'Complete' %}
-                                <span class="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs border border-green-500/20">Complete</span>
+                                {% if log.worker_type == 'Meshy' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                                      ✨ Hero (Meshy)
+                                    </span>
                                 {% else %}
-                                <span class="px-2 py-1 bg-red-500/10 text-red-400 rounded text-xs border border-red-500/20">Failed</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+                                      🔨 Standard (Blender)
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-slate-500 font-mono text-xs">{{ log.timestamp }}</td>
+                            <td class="px-6 py-4 text-right">
+                                {% if log.status == 'Complete' %}
+                                <span class="inline-block w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+                                {% else %}
+                                <span class="inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -126,34 +179,38 @@
         </section>
     </main>
 </div>
+
 <script>
-async function startForge() {
-    // 1. Get the User's Input
-    let prompt = window.prompt("Enter scene description (e.g. 'Cyberpunk Alleyway'):");
-    if (!prompt) return;
+    // Simple script to add 'glitch' effect or API calls
+    async function startForge() {
+        let prompt = window.prompt(">> ENTER SCENE PARAMETERS:");
+        if (!prompt) return;
 
-    // 2. Get the API Key from the page
-    let apiKey = document.getElementById('api-key').innerText.trim();
+        // Visual feedback
+        const btn = document.querySelector('button[onclick="startForge()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="animate-pulse">TRANSMITTING...</span>';
+        
+        let apiKey = document.getElementById('api-key').innerText.trim();
 
-    // 3. Send to Backend
-    try {
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: prompt, api_key: apiKey })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === "success") {
-            alert("Forge Initiated! Credits remaining: " + data.credits_remaining);
-            location.reload(); // Refresh to show new log
-        } else {
-            alert("Error: " + data.message);
+        try {
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt, api_key: apiKey })
+            });
+            const data = await response.json();
+            
+            if (data.status === "success") {
+                location.reload(); 
+            } else {
+                alert("SYSTEM ERROR: " + data.message);
+                btn.innerHTML = originalText;
+            }
+        } catch (error) {
+            console.error(error);
+            btn.innerHTML = originalText;
         }
-    } catch (error) {
-        console.error("Forge failed:", error);
     }
-}
 </script>
 {% endblock %}
