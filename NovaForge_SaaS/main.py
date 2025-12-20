@@ -9,13 +9,12 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# --- f510 SECRETS ---
-# Add 'GEMINI_API_KEY' to your Replit Secrets!
+# --- SECRETS ---
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 LEONARDO_API_KEY = os.environ.get('LEONARDO_API_KEY')
 MESHY_API_KEY = os.environ.get('MESHY_API_KEY')
 
-# Configure Boto3 for DigitalOcean Spaces
+# --- DIGITALOCEAN SPACES CONFIG ---
 s3_client = boto3.client(
     's3',
     region_name='nyc3',
@@ -24,19 +23,12 @@ s3_client = boto3.client(
     aws_secret_access_key=os.environ.get('DO_SPACES_SECRET')
 )
 
-# --- f4da GAME LORE CONTEXT ---
-# PASTE YOUR ENTIRE GAME DESIGN DOCUMENT HERE (Gemini can handle ~1M tokens)
+# --- GAME LORE ---
 GAME_LORE = """
 Title: NOVA FORGE
 Setting: Post-Apocalyptic Cyberpunk (Year 2140).
-Visual Style: High contrast, neon purple/blue, rusty metal, rain-slicked streets.
-Key Factions:
-1. The Ascended (High-tech, clean white/gold aesthetics).
-2. The Rustborn (Scavengers, improvised tech, messy cables, graffiti).
-Current Location: Sector 7 Slums.
 """
 
-# Configure Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 
 app = Flask(__name__)
@@ -47,94 +39,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///novaforge.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# --- f5c4e0f DATABASE MODELS ---
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), nullable=False)
-    api_key = db.Column(db.String(120), unique=True, nullable=False)
-    credits_total = db.Column(db.Integer, default=1000)
-    credits_used = db.Column(db.Integer, default=0)
+# --- MODELS ---
 
-class GenerationLog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    original_prompt = db.Column(db.String(500), nullable=False)
-    refined_prompt = db.Column(db.String(1000)) 
-    dimensions_json = db.Column(db.String(500)) 
-    worker_type = db.Column(db.String(20))
-    status = db.Column(db.String(50), default="Processing")
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    refined_prompt = db.Column(db.String(1000))
+    dimensions_json = db.Column(db.String(500))
+# --- HELPER FUNCTIONS ---
 
-# --- f4ca GEMINI AGENT: THE BRAIN ---
-def orchestrate_with_gemini(user_prompt, image_url=None):
-    """
-    Gemini 1.5 Pro acts as BOTH Architect (Math) and Narrator (Lore).
-    It returns a structured JSON with everything we need.
-    """
-    print(f"f4ca Gemini Processing: {user_prompt}")
-    
-    # Use 'gemini-1.5-pro' for complex reasoning/vision, or 'gemini-1.5-flash' for speed
-    model = genai.GenerativeModel('gemini-1.5-pro')
-
-    system_instruction = f"""
-    You are the AI Engine for a Unity game called 'NovaForge'.
-    
-    CONTEXT (GAME LORE):
-    {GAME_LORE}
-    
-    TASK:
-    Analyze the user's request: '{user_prompt}'.
-    
-    1. ARCHITECT (Math): Determine the best physical dimensions for this object in Unity (meters).
-    2. NARRATOR (Lore): Rewrite the prompt to fit the visual style of the Lore provided above. Be specific with textures and mood.
-    3. DISPATCHER: Decide if this is a 'Character' (complex) or 'Prop/Terrain' (simple).
-
-    OUTPUT FORMAT (JSON ONLY):
-    {{
-        "refined_prompt": "The lore-accurate description...",
-        "dimensions": {{ "height": float, "width": float, "depth": float }},
-        "category": "Character" or "Prop" or "Terrain",
-        "complexity": "High" or "Low"
-    }}
-    """
-    
-    inputs = [system_instruction]
-    
-    # If user provided a sketch, Gemini "looks" at it
-    if image_url:
-        inputs.append(f"Reference Image URL: {image_url} (Use this for layout/dimensions)")
-
-    try:
-        # Force JSON response
-        response = model.generate_content(
-            inputs, 
-            generation_config={"response_mime_type": "application/json"}
-        )
-        return json.loads(response.text)
-    except Exception as e:
-        print(f"Gemini Error: {e}")
-        # Fallback
-        return {
-            "refined_prompt": user_prompt,
-            "dimensions": {"height": 1.0, "width": 1.0, "depth": 1.0},
-            "category": "Prop",
-            "complexity": "Low"
-        }
-
-# --- f3a8 ARTIST AGENTS (Leonardo & Meshy) ---
-def generate_concept(prompt):
-    print(f"f3a8 Leonardo Painting: {prompt}")
-    url = "https://cloud.leonardo.ai/api/rest/v1/generations"
-    headers = {"Authorization": f"Bearer {LEONARDO_API_KEY}", "Content-Type": "application/json"}
-    
-    try:
-        res = requests.post(url, headers=headers, json={
-            "prompt": f"{prompt}, isolated, 3d render style, game asset, neutral lighting",
-            "modelId": "6b645e3a-d64f-4341-a6d8-7a3690fbf042",
-            "width": 1024, "height": 1024, "num_images": 1
-        })
 def dispatch_to_blender(job_id, prompt, dimensions):
     """Creates a Job JSON and uploads it to the 'queue' folder in Spaces."""
+    print(f"Dispatching Job {job_id} to Blender Queue...")
     job_data = {
         "job_id": job_id,
         "output_name": job_id,
@@ -144,24 +57,64 @@ def dispatch_to_blender(job_id, prompt, dimensions):
     }
 
     filename = f"{job_id}.json"
-    with open(filename, 'w') as f:
-        json.dump(job_data, f)
+    try:
+        with open(filename, 'w') as f:
+            json.dump(job_data, f)
 
-    s3_client.upload_file(
-        filename,
-        os.environ.get('DO_SPACES_BUCKET'),
-        f"novaforge/queue/{filename}"
-    )
-    print(f"Job {job_id} dispatched to Queue!")
-
-        job_id = uuid.uuid4().hex
-        dispatch_to_blender(job_id, refined_prompt, dims)
-        time.sleep(8) # Poll wait
-        res = requests.get(f"{url}/{gen_id}", headers=headers)
-        return res.json()['generations_by_pk']['generated_images'][0]['url']
+        s3_client.upload_file(
+            filename,
+            os.environ.get('DO_SPACES_BUCKET'),
+            f"novaforge/queue/{filename}"
+        )
+        print(f"Job {job_id} successfully uploaded to Queue!")
     except Exception as e:
-        print(f"Leonardo Error: {e}")
-        return None
+        print(f"FAILED to dispatch job: {e}")
+
+
+    print(f"Gemini Processing: {user_prompt}")
+    You are the AI Engine for 'NovaForge'.
+    CONTEXT: {GAME_LORE}
+    TASK: Analyze request '{user_prompt}'.
+    OUTPUT JSON: {{
+        "refined_prompt": "Lore description...",
+        "category": "Prop",
+        "complexity": "Low"
+        inputs.append(f"Reference: {image_url}")
+            inputs,
+def generate_meshy(prompt):
+    # (Placeholder for Meshy logic if needed later)
+    return None
+# --- API ROUTES ---
+
+
+    if not user:
+        return jsonify({"error": "Invalid API Key"}), 401
+
+    # 1. GENERATE ID & LOG
+    job_id = uuid.uuid4().hex
+    # 2. ASK GEMINI
+    gemini_data = orchestrate_with_gemini(prompt)
+    # 3. DISPATCHER LOGIC
+    # For this test, we default to Blender unless it's a Character
+    if gemini_data.get('category') == 'Character':
+        generate_meshy(refined_prompt)
+        worker = "Blender"
+        # THIS WAS MISSING BEFORE:
+        dispatch_to_blender(job_id, refined_prompt, dims)
+    # 4. SAVE LOG
+
+        "job_id": job_id,
+        "message": f"Job dispatched to {worker}."
+
+def home():
+    return redirect(url_for('dashboard'))
+
+    with app.app_context():
+        db.create_all()
+        db.session.add(User(
+            username="Commander",
+            api_key=f"nf_live_{uuid.uuid4().hex[:8]}"
+        ))
 
 def generate_meshy(prompt, image_url=None):
     print(f"f528 Meshy Sculpting...")
