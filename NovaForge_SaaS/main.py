@@ -1,4 +1,5 @@
 import os 
+import re
 import time
 import json
 import uuid
@@ -166,17 +167,13 @@ def dispatch_to_blender(job_id, prompt, dimensions):
         "terrain": {"type": "procedural", "dimensions": dimensions}
     }
 
-    filename = f"{job_id}.json"
     try:
-        with open(filename, 'w') as f:
-            json.dump(job_data, f)
-
-        s3_client.upload_file(
-            filename,
-            os.environ.get('DO_SPACES_BUCKET'),
-            f"novaforge/queue/{filename}"
+        s3_client.put_object(
+            Bucket=os.environ.get('DO_SPACES_BUCKET'),
+            Key=f"novaforge/novaforge/queue/{job_id}.json",
+            Body=json.dumps(job_data),
+            ContentType='application/json'
         )
-        os.remove(filename)
         print(f"Job {job_id} successfully uploaded to Queue!")
     except Exception as e:
         print(f"FAILED to dispatch job: {e}")
@@ -184,6 +181,7 @@ def dispatch_to_blender(job_id, prompt, dimensions):
 # --- API ROUTES ---
 @app.route('/api/generate', methods=['POST'])
 def generate():
+    print(">>> INCOMING SIGNAL FROM UNITY <<<")
     data = request.json
     api_key = data.get('api_key')
     prompt = data.get('prompt')
@@ -206,7 +204,10 @@ def generate():
         concept_url = generate_concept(refined_prompt)
         generate_meshy(refined_prompt, concept_url)
     else:
-        job_id = uuid.uuid4().hex
+        # Readable naming: "glowing blue cube" -> "glowing_blue_cube_1734567890"
+        safe_name = re.sub(r'[^a-zA-Z0-9]', '_', prompt)[:30]
+        timestamp = int(time.time())
+        job_id = f"{safe_name}_{timestamp}"
         dispatch_to_blender(job_id, refined_prompt, dims)
 
     # 3. SAVE LOG
