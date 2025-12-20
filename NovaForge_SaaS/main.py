@@ -3,6 +3,7 @@ import time
 import json
 import uuid
 import requests
+import boto3
 import google.generativeai as genai
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,15 @@ from datetime import datetime
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 LEONARDO_API_KEY = os.environ.get('LEONARDO_API_KEY')
 MESHY_API_KEY = os.environ.get('MESHY_API_KEY')
+
+# Configure Boto3 for DigitalOcean Spaces
+s3_client = boto3.client(
+    's3',
+    region_name='nyc3',
+    endpoint_url='https://nyc3.digitaloceanspaces.com',
+    aws_access_key_id=os.environ.get('DO_SPACES_KEY'),
+    aws_secret_access_key=os.environ.get('DO_SPACES_SECRET')
+)
 
 # --- f4da GAME LORE CONTEXT ---
 # PASTE YOUR ENTIRE GAME DESIGN DOCUMENT HERE (Gemini can handle ~1M tokens)
@@ -123,7 +133,29 @@ def generate_concept(prompt):
             "modelId": "6b645e3a-d64f-4341-a6d8-7a3690fbf042",
             "width": 1024, "height": 1024, "num_images": 1
         })
-        gen_id = res.json()['sdGenerationJob']['generationId']
+def dispatch_to_blender(job_id, prompt, dimensions):
+    """Creates a Job JSON and uploads it to the 'queue' folder in Spaces."""
+    job_data = {
+        "job_id": job_id,
+        "output_name": job_id,
+        "output_prefix": "novaforge/outputs",
+        "prompt": prompt,
+        "terrain": {"type": "procedural", "dimensions": dimensions}
+    }
+
+    filename = f"{job_id}.json"
+    with open(filename, 'w') as f:
+        json.dump(job_data, f)
+
+    s3_client.upload_file(
+        filename,
+        os.environ.get('DO_SPACES_BUCKET'),
+        f"novaforge/queue/{filename}"
+    )
+    print(f"Job {job_id} dispatched to Queue!")
+
+        job_id = uuid.uuid4().hex
+        dispatch_to_blender(job_id, refined_prompt, dims)
         time.sleep(8) # Poll wait
         res = requests.get(f"{url}/{gen_id}", headers=headers)
         return res.json()['generations_by_pk']['generated_images'][0]['url']
